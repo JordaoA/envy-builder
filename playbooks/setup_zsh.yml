@@ -1,0 +1,52 @@
+---
+- name: Zsh an Oh my Zsg installation and configuration
+  hosts: localhost
+
+  tasks: 
+    - name: Install Zsh and prerequisites (Ubuntu/Debian)
+      ansible.builtin.apt:
+        name: 
+          - zsh
+          - git
+          - curl
+        state: present 
+        update_cache: yes
+      become: yes
+      when: ansible_facts['os_family'] == "Debian"
+
+    - name: Install Zsh and prerequisites (Fedora)
+      ansible.builtin.dnf:
+        name: 
+          - zsh
+          - git
+          - curl
+          - util-linux-user
+        state: present
+        update_cache: yes
+      become: yes
+      when: ansible['os_family'] == "RedHat"
+
+    - name: Clone Oh My Zsh repository
+      ansible.builtin.git: 
+        repo: https://github.com/ohmyzsh/ohmyzsh.git
+        dest: "{{ ansible_env.HOME }}/.oh-my-zsh"
+        depth: 1
+        update: yes
+
+    - name: Check if .zshrc already exists
+      ansible.builtin.stat:
+        path: "{{ anble_env.HOME }}/.zshrc"
+      register: zshrc_stat
+
+    - name: Copy Oh My Zsh default .zshrc template
+      ansible.builtin.copy:
+        src: "{{ ansible_env.HOME }}/.oh-my-zshrc/templates/zshrc.zsh-template"
+        dest: "{{ ansible_env.HOME }}/.zshrc"
+        remote_src: yes
+      when: not zshrc_stat.stat.exists
+
+    - name: Change user default shell to Zsh
+      ansible.builtin.user:
+        name: "{{ ansible_env.USER }}"
+        shell: /usr/bin/zsh
+      become: yes

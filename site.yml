@@ -1,0 +1,3 @@
+---
+- import_playbook: playbooks/setup_base.yml
+- import_playbook: playbooks/setup_zsh.yml
