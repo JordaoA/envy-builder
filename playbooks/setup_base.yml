@@ -13,7 +13,7 @@
           - htop
           - fastfetch
         state: present
-        become: yes
+      become: yes
     
     - name: Update apt cache and install Docker (debian based)
       ansible.builtin.apt:
