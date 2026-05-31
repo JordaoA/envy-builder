@@ -40,7 +40,7 @@
 
     - name: Copy Oh My Zsh default .zshrc template
       ansible.builtin.copy:
-        src: "{{ ansible_facts['env']['HOME'] }}/.oh-my-zshrc/templates/zshrc.zsh-template"
+        src: "{{ ansible_facts['env']['HOME'] }}/Documents/dotfiles/zshell/.zshrc"
         dest: "{{ ansible_facts['env']['HOME'] }}/.zshrc"
         remote_src: yes
       when: not zshrc_stat.stat.exists
