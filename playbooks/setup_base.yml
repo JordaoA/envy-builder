@@ -1,7 +1,6 @@
 ---
 - name: Baseline libs and tools instalation
   hosts: localhost
-  become: yes
 
   tasks:
 
@@ -14,12 +13,14 @@
           - htop
           - fastfetch
         state: present
+        become: yes
     
     - name: Update apt cache and install Docker (debian based)
       ansible.builtin.apt:
         name: docker.io
         state: present
         update_cache: yes
+      become: yes
       when: ansible_facts['os_family'] == "Debian"
 
     - name: Install Docker (Fedora bolado demais)
@@ -27,6 +28,7 @@
         name: docker
         state: present
         update_cache: yes
+      become: yes
       when: ansible_facts['os_family'] == "RedHat"
 
     - name: Ensure Docker service is started and enabled on boot
@@ -34,12 +36,14 @@
         name: docker
         state: started
         enabled: yes
+      become: yes
 
     - name: Add current user to the Docker group
       ansible.builtin.user:
         name: "{{ ansible_facts['user_id'] }}"
         groups: docker
         append: yes
+      become: yes
 
     - name: Reset connection to apply user group changes
       ansible.builtin.meta: reset_connection
