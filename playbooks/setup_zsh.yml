@@ -29,24 +29,24 @@
     - name: Clone Oh My Zsh repository
       ansible.builtin.git: 
         repo: https://github.com/ohmyzsh/ohmyzsh.git
-        dest: "{{ ansible_env.HOME }}/.oh-my-zsh"
+        dest: "{{ ansible_facts['env']['HOME'] }}/.oh-my-zsh"
         depth: 1
         update: yes
 
     - name: Check if .zshrc already exists
       ansible.builtin.stat:
-        path: "{{ ansible_env.HOME }}/.zshrc"
+        path: "{{ ansible_facts['env']['HOME'] }}/.zshrc"
       register: zshrc_stat
 
     - name: Copy Oh My Zsh default .zshrc template
       ansible.builtin.copy:
-        src: "{{ ansible_env.HOME }}/.oh-my-zshrc/templates/zshrc.zsh-template"
-        dest: "{{ ansible_env.HOME }}/.zshrc"
+        src: "{{ ansible_facts['env']['HOME'] }}/.oh-my-zshrc/templates/zshrc.zsh-template"
+        dest: "{{ ansible_facts['env']['HOME'] }}/.zshrc"
         remote_src: yes
       when: not zshrc_stat.stat.exists
 
     - name: Change user default shell to Zsh
       ansible.builtin.user:
-        name: "{{ ansible_env.USER }}"
+        name: "{{ ansible_facts['env']['USER'] }}"
         shell: /usr/bin/zsh
       become: yes
