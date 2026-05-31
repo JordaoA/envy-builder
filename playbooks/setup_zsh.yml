@@ -35,7 +35,7 @@
 
     - name: Check if .zshrc already exists
       ansible.builtin.stat:
-        path: "{{ anble_env.HOME }}/.zshrc"
+        path: "{{ ansible_env.HOME }}/.zshrc"
       register: zshrc_stat
 
     - name: Copy Oh My Zsh default .zshrc template
